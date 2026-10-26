@@ -1,5 +1,11 @@
-//Questo semplice programma implementa una rubrica telefonica
-
+/* main.cpp della rubrica telefonica. Gestisce 3 diversi tipi di storage:
+ *  SQLite
+ *  JSON
+ *  Semplice file testuale
+ * Inoltre offre due tipi di frontend:
+ *  TUI
+ *  GUI
+*/
 #include <unicode/unistr.h>
 #include <iostream>
 #include <algorithm>
@@ -474,6 +480,19 @@ inizializzaRubrica (const string& file_contatti, const string& file_config) {
 }
 
 int main() {
+
+    /*
+     * Per prima cosa devo sapere quale tipo di storage verrà usato: SQLite, JSON oppure testuale
+     * C'è una interfaccia astratta con i relativi metodi (ContactRepository.h) e poi tre interfacce
+     * ognuna con la sua implementazione: SqliteRepository.h, JsonRepository.h e TextFileRepository.h
+     *
+    */
+    std::unique_ptr<ContactRepository> repo;
+    if (scelta == 1) repo = std::make_unique<SqliteRepository>("rubrica.db");
+    else if (scelta == 2) repo = std::make_unique<JsonRepository>("rubrica.json");
+    else if (scelta == 3) repo = std::make_unique<TextFileRepository>("filecontatti.txt");
+    else return 1; // Se viene scelto un tipo di storage non valido, uscire subito
+
     auto risultato = inizializzaRubrica ("filecontatti.txt", "config.txt");
     if (!risultato) {
         cerr << "Errore: " << risultato.error() << endl;
