@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #---------------
 # 1. Dipendenze
 #---------------
-# Trova la libreria SQLite3 instllata nel sistema
+# Trova la libreria SQLite3 installata nel sistema
 # Se non c'è, va prima installata col comando: sudo apt install libsqlite3-dev
 
 find_package(SQLite3 REQUIRED)
@@ -40,14 +40,16 @@ FetchContent_MakeAvailable(SQLiteCpp)
 add_executable(Rubrica
     src/main.cpp
     src/Contact.cpp
-    src/DatabaseManager.cpp
+    src/SqliteRepository.cpp
     )
 
 # Aggiunge la cartella include/ per i file .h
 target_include_directories(Rubrica PRIVATE include)
 
-# Collega le librerie (SQLiteCpp e SQLite3) all'eseguitile
+# Collega le librerie (SQLiteCpp e SQLite3) all'eseguibile
+find_package(ICU REQUIRED COMPONENTS uc)
 target_link_libraries(Rubrica PRIVATE
     SQLiteCpp
     ${SQLITE3_LIBRARIES}
+    ICU::uc # Aggiungo anche ICU::uc per la funzione che gestisce Unicode
     )
